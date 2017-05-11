@@ -10,7 +10,6 @@ MRuby::Gem::Specification.new('mruby-socket') do |spec|
     spec.linker.libraries << "ws2_32"
   end
 
-  spec.add_dependency('mruby-io')
+  spec.add_dependency('mruby-io', :github => 'mruby-esp32/mruby-io', :branch => 'esp32')
   spec.add_dependency('mruby-pack')
-  # spec.add_dependency('mruby-mtest')
 end
