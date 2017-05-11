@@ -20,16 +20,14 @@ Date: Tue, 21 May 2013 04:31:30 GMT
 ```
 
 ## Requirement
-- [iij/mruby-io](https://github.com/iij/mruby-io) mrbgem
-- [iij/mruby-mtest](https://github.com/iij/mruby-mtest) mrgbem to run tests
+- [mruby-esp32/mruby-io](https://github.com/mruby-esp32/mruby-io) mrbgem
+- [iij/mruby-pack](https://github.com/iij/mruby-pack) mrgbem
 - system must have RFC3493 basic socket interface
 - and some POSIX API...
 
 ## TODO
 - add missing methods
-- write more tests
 - fix possible descriptor leakage (see XXX comments)
-- `UNIXSocket#recv_io` `UNIXSocket#send_io`
 
 
 ## License
