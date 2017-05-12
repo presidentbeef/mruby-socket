@@ -4,6 +4,12 @@ mruby-socket
 "mruby-socket" mrbgem provides BSD socket interface for mruby.
 API is compatible with CRuby's "socket" library.
 
+## Installation
+Add the line below to your `build_config.rb`:
+
+```ruby
+  conf.gem :github => 'mruby-esp32/mruby-socket', :branch => 'esp32'
+```
 
 ## Example
 ```sh
