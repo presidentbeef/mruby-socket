@@ -11,6 +11,19 @@ Add the line below to your `build_config.rb`:
   conf.gem :github => 'mruby-esp32/mruby-socket', :branch => 'esp32'
 ```
 
+If stack overflow occurs, increase the stack size
+
++ mruby_task: 8192 => 32768
+
+  `xTaskCreate()` in `main/mruby_main.c`
+
++ eventTask: 4096 => 32768
+
+  ```
+  $ make menuconfig
+  Component config ---> ESP32-specific ---> Event loop task stack size
+  ```
+  
 ## Example
 ```sh
 % vi kame.rb
