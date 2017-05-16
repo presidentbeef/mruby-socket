@@ -33,7 +33,7 @@ wifi = ESP32::WiFi.new
 wifi.on_connected do |ip|
   puts "Wi-Fi Connected: #{ip} (#{Socket.gethostname})"
   soc = TCPSocket.open("www.kame.net", 80)
-  msg = "HEAD / HTTP/1.1\r\nHost: www.klab.com\r\nConnection: close\r\n\r\n"
+  msg = "HEAD / HTTP/1.1\r\nHost: www.kame.net\r\nConnection: close\r\n\r\n"
   msg.split("\r\n").each do |e|
     puts ">>> #{e}"
   end
