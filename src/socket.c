@@ -15,7 +15,7 @@
 #else
   #include <sys/types.h>
   #include <sys/socket.h>
- #ifndef _ESP32
+ #ifndef ESP_PLATFORM
   #include <sys/un.h>
   #include <netinet/tcp.h>
  #endif
@@ -45,7 +45,7 @@
 #define mrb_cptr_p(o) mrb_voidp_p(o)
 #endif
 
-#ifdef _ESP32
+#ifdef ESP_PLATFORM
 
 #include "tcpip_adapter.h"
 
@@ -264,7 +264,7 @@ mrb_addrinfo_getnameinfo(mrb_state *mrb, mrb_value self)
   return ary;
 }
 
-#if !defined(_WIN32) && !defined(_ESP32)
+#if !defined(_WIN32) && !defined(ESP_PLATFORM)
 static mrb_value
 mrb_addrinfo_unix_path(mrb_state *mrb, mrb_value self)
 {
@@ -691,7 +691,7 @@ mrb_socket_sockaddr_family(mrb_state *mrb, mrb_value klass)
   mrb_value sa;
 
   mrb_get_args(mrb, "S", &sa);
-#if defined(__linux__) || defined(_ESP32)
+#if defined(__linux__) || defined(ESP_PLATFORM)
   if (RSTRING_LEN(sa) < offsetof(struct sockaddr, sa_family) + sizeof(sa_family_t)) {
     mrb_raisef(mrb, E_SOCKET_ERROR, "invalid sockaddr (too short)");
   }
@@ -706,7 +706,7 @@ mrb_socket_sockaddr_family(mrb_state *mrb, mrb_value klass)
 static mrb_value
 mrb_socket_sockaddr_un(mrb_state *mrb, mrb_value klass)
 {
-#if defined(_WIN32) || defined(_ESP32)
+#if defined(_WIN32) || defined(ESP_PLATFORM)
   mrb_raise(mrb, E_NOTIMP_ERROR, "sockaddr_un unsupported on this platform");
   return mrb_nil_value();
 #else
@@ -730,7 +730,7 @@ mrb_socket_sockaddr_un(mrb_state *mrb, mrb_value klass)
 static mrb_value
 mrb_socket_socketpair(mrb_state *mrb, mrb_value klass)
 {
-#if defined(_WIN32) || defined(_ESP32)
+#if defined(_WIN32) || defined(ESP_PLATFORM)
   mrb_raise(mrb, E_NOTIMP_ERROR, "socketpair unsupported on this platform");
   return mrb_nil_value();
 #else
@@ -779,7 +779,7 @@ mrb_tcpsocket_allocate(mrb_state *mrb, mrb_value klass)
  * descriptors, and thus functions which operate on file descriptors
  * will break on socket descriptors.
  */
-#if defined(_WIN32) || defined(_ESP32)
+#if defined(_WIN32) || defined(ESP_PLATFORM)
 static mrb_value
 mrb_basicsocket_close(mrb_state *mrb, mrb_value self)
 {
@@ -872,7 +872,7 @@ mrb_mruby_socket_gem_init(mrb_state* mrb)
   result = WSAStartup(MAKEWORD(2,2), &wsaData);
   if (result != NO_ERROR)
     mrb_raise(mrb, E_RUNTIME_ERROR, "WSAStartup failed");
-#elif !defined(_ESP32)
+#elif !defined(ESP_PLATFORM)
   struct RClass *usock;
 #endif
 
@@ -880,7 +880,7 @@ mrb_mruby_socket_gem_init(mrb_state* mrb)
   mrb_mod_cv_set(mrb, ai, mrb_intern_lit(mrb, "_lastai"), mrb_nil_value());
   mrb_define_class_method(mrb, ai, "getaddrinfo", mrb_addrinfo_getaddrinfo, MRB_ARGS_REQ(2)|MRB_ARGS_OPT(4));
   mrb_define_method(mrb, ai, "getnameinfo", mrb_addrinfo_getnameinfo, MRB_ARGS_OPT(1));
-#if !defined(_WIN32) && !defined(_ESP32)
+#if !defined(_WIN32) && !defined(ESP_PLATFORM)
   mrb_define_method(mrb, ai, "unix_path", mrb_addrinfo_unix_path, MRB_ARGS_NONE());
 #endif
 
@@ -929,7 +929,7 @@ mrb_mruby_socket_gem_init(mrb_state* mrb)
   mrb_define_class_method(mrb, sock, "socketpair", mrb_socket_socketpair, MRB_ARGS_REQ(3));
   //mrb_define_method(mrb, sock, "sysaccept", mrb_socket_accept, MRB_ARGS_NONE());
 
-#if !defined(_WIN32) && !defined(_ESP32)
+#if !defined(_WIN32) && !defined(ESP_PLATFORM)
   usock = mrb_define_class(mrb, "UNIXSocket", bsock);
 #endif
   //mrb_define_class_method(mrb, usock, "pair", mrb_unixsocket_open, MRB_ARGS_OPT(2));
@@ -940,7 +940,7 @@ mrb_mruby_socket_gem_init(mrb_state* mrb)
   //mrb_define_method(mrb, usock, "send_io", mrb_unixsocket_peeraddr, MRB_ARGS_NONE());
 
   /* IO Method Overrides on BasicSocket */
-#if defined(_WIN32) || defined(_ESP32)
+#if defined(_WIN32) || defined(ESP_PLATFORM)
   mrb_define_method(mrb, bsock, "close", mrb_basicsocket_close, MRB_ARGS_NONE());
   mrb_define_method(mrb, bsock, "sysread", mrb_basicsocket_sysread, MRB_ARGS_REQ(1)|MRB_ARGS_OPT(1));
   mrb_define_method(mrb, bsock, "sysseek", mrb_basicsocket_sysseek, MRB_ARGS_REQ(1));
