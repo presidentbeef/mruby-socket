@@ -77,7 +77,7 @@ gai_strerror(int errcode)
     return buf;
 }
 
-static int
+int
 getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, socklen_t hostlen, char *serv, socklen_t servlen, int flags)
 {
   void *addr;
